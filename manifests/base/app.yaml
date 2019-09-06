@@ -16,7 +16,7 @@ spec:
         - name: dockerhub-key
       containers:
         - name: kafka-topic-applier
-          image: registry.uw.systems/bill-integration/kafka-topic-applier:latest
+          image: registry.uw.systems/billing/kafka-topic-applier:latest
           imagePullPolicy: Always
           resources:
             requests:
@@ -24,5 +24,33 @@ spec:
             limits:
               memory: 100Mi
           env:
-            - name: EQDB_LOADER_BIGQUERY_CREDENTIALS_FILE
-              value: /secrets/google_application_credentials.json
+            - name: OPS_PORT
+              value: '8081'
+            - name: TOPICS_FILE
+              value: /tmp/topics.yaml
+            - name: GRPC_PORT
+              value: '8090'
+            - name: LOG_LEVEL
+              value: warn
+            - name: TEAM
+              value: billing
+            - name: LOG_FORMAT
+              value: json
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-brokers
+                  key: internal.kafka.brokers
+            - name: KAFKA_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-brokers
+                  key: internal.kafka.broker.version
+          volumeMounts:
+            - name: kafka-topics
+              mountPath: /tmp/topics.yaml
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: kafka-topics
+          name: kafka-topics

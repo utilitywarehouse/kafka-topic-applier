@@ -9,5 +9,5 @@ spec:
         - name: kafka-topic-applier
           image: registry.uw.systems/billing/kafka-topic-applier:latest
           env:
-            - name: EQDB_LOADER_BIGQUERY_PROJECT_ID
-              value: uw-net
+            - name: TEAM
+              value: billing
