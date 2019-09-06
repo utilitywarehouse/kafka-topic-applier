@@ -25,10 +25,10 @@ func (l *Applier) Apply(filePath string) error {
 	if err != nil {
 		return err
 	}
-	existingTopicMap := make(map[string]bool)
+	topicExists := make(map[string]bool)
 
 	for _, t := range existingTopics.Topics {
-		existingTopicMap[t.Name] = true
+		topicExists[t.Name] = true
 	}
 
 	tt, err := getTopicsFromFile(filePath)
@@ -38,7 +38,9 @@ func (l *Applier) Apply(filePath string) error {
 
 	for _, t := range tt.Topics {
 		switch {
-		case existingTopicMap[t.Name] && !t.ShouldBeRemoved:
+		case topicExists[t.Name] && !t.ShouldBeRemoved:
+			continue
+		case !topicExists[t.Name] && t.ShouldBeRemoved:
 			continue
 		case t.ShouldBeRemoved:
 			log.Infof("removing topic %s", t.Name)

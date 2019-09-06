@@ -2,10 +2,14 @@ package service_test
 
 import (
 	"context"
+	"log"
 	"testing"
 
+	"github.com/Shopify/sarama"
 	"github.com/golang/mock/gomock"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/mocks"
+	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/service"
 )
 
@@ -16,7 +20,7 @@ type testSuite struct {
 }
 
 type mockz struct {
-	cli *mocks.MockClusterAdmin
+	ca *mocks.MockClusterAdmin
 }
 
 func testSetup(t *testing.T) (testSuite, *gomock.Controller) {
@@ -29,11 +33,44 @@ func testSetup(t *testing.T) (testSuite, *gomock.Controller) {
 	return testSuite{
 		ctx,
 		svc,
-		&mockz{},
+		&mockz{ca},
 	}, ctrl
 }
 
 func TestSuccessfullyCreate(t *testing.T) {
-	_, ctrl := testSetup(t)
+	ts, ctrl := testSetup(t)
 	defer ctrl.Finish()
+
+	ts.mock.ca.EXPECT().CreateTopic("name", gomock.Any(), false).Return(nil).Times(1)
+
+	_, err := ts.svc.Create(ts.ctx, &kta.Topic{Name: "name"})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+func TestSuccessfullyList(t *testing.T) {
+	ts, ctrl := testSetup(t)
+	defer ctrl.Finish()
+
+	tt := make(map[string]sarama.TopicDetail)
+	ts.mock.ca.EXPECT().ListTopics().Return(tt, nil).Times(1)
+
+	_, err := ts.svc.List(ts.ctx, &empty.Empty{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func TestSuccessfullyDelete(t *testing.T) {
+	ts, ctrl := testSetup(t)
+	defer ctrl.Finish()
+
+	ts.mock.ca.EXPECT().DeleteTopic("name").Return(nil).Times(1)
+
+	_, err := ts.svc.Delete(ts.ctx, &kta.Topic{Name: "name"})
+	if err != nil {
+		log.Fatal(err)
+	}
 }
