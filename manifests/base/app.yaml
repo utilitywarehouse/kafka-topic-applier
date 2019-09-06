@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-topic-applier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-topic-applier
+  template:
+    metadata:
+      labels:
+        app: kafka-topic-applier
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-key
+      containers:
+        - name: kafka-topic-applier
+          image: registry.uw.systems/bill-integration/kafka-topic-applier:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 50Mi
+            limits:
+              memory: 100Mi
+          env:
+            - name: EQDB_LOADER_BIGQUERY_CREDENTIALS_FILE
+              value: /secrets/google_application_credentials.json
