@@ -1,0 +1,30 @@
+topics:
+  - name: billing-engine-events
+    partitions: 10
+    replication_factor: 3
+    max_retention_bytes: -1
+    max_retention_time: -1
+  - name: finance-transaction-log
+    partitions: 10
+    replication_factor: 3
+    max_retention_bytes: -1
+    max_retention_time: -1
+  - name: S1BillExtractAvailableEvents
+    partitions: 15
+    replication_factor: 3
+  - name: bill-extracts-historic-model
+    partitions: 10
+    replication_factor: 3
+    topic_compression: snappy
+    max_message_bytes: 104857600
+  - name: billing-engine-events
+    partitions: 10
+    replication_factor: 3
+  - name: finance-invoice-model
+    partitions: 10
+    replication_factor: 3
+    max_message_bytes: 104857600
+    topic_compression: snappy
+  - name: bills.deadletter
+    partitions: 10
+    replication_factor: 3
