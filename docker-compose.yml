@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  kafka:
+    image: quay.io/utilitywarehouse/uw-kafka:v2.0.1
+    environment:
+      ADVERTISED_HOST: localhost
+      ADVERTISED_PORT: 9092
+      AUTO_CREATE_TOPICS: "false"
+    ports:
+      - "9092:9092"
+      - "2181:2181"
