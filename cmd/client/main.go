@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	cli "github.com/jawher/mow.cli"
@@ -16,7 +15,6 @@ import (
 const (
 	appDescription = "App that produces printable invoice models"
 	appName        = "client"
-	timeFormat     = "2006/01/02"
 )
 
 func main() {
@@ -30,7 +28,7 @@ func main() {
 	})
 	ctx := context.Background()
 
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", *grpcPort), grpc.WithInsecure(), grpc.WithTimeout(9*time.Second))
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", *grpcPort), grpc.WithInsecure())
 	if err != nil {
 		log.Fatal("conn err", err)
 	}

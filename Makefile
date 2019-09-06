@@ -26,7 +26,7 @@ SPACE := $(EMPTY) $(EMPTY)
 join-with = $(subst $(SPACE),$1,$(strip $2))
 
 
-LINT_FLAGS :=--disable  errcheck --disable staticcheck
+LINT_FLAGS :=--disable  errcheck 
 LINTER_EXE := golangci-lint
 LINTER := $(GOPATH)/bin/$(LINTER_EXE)
 
