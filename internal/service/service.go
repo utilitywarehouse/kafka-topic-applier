@@ -8,7 +8,7 @@ import (
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 )
 
-var (
+const (
 	compressionType = "compression.type"
 	maxMessageBytes = "max.message.bytes"
 	retentionBytes  = "retention.bytes"
