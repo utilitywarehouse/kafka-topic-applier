@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/ghodss/yaml"
 	"github.com/golang/protobuf/ptypes/empty"
 	cli "github.com/jawher/mow.cli"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
@@ -37,14 +38,27 @@ func main() {
 	defer conn.Close()
 
 	app.Command("list", "list topics", func(cmd *cli.Cmd) {
+		useYAML := cmd.Bool(cli.BoolOpt{
+			Name:  "yaml",
+			Desc:  "Show YAML results",
+			Value: false,
+		})
 
 		cmd.Action = func() {
-
 			resp, err := grpcClient.List(ctx, &empty.Empty{})
 			if err != nil {
 				log.Fatal("failed to run command", err)
 			}
-			fmt.Println(resp)
+
+			if *useYAML {
+				y, err := yaml.Marshal(resp)
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println(string(y))
+			} else {
+				fmt.Println(resp)
+			}
 		}
 	})
 
