@@ -8,6 +8,14 @@ import (
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 )
 
+const (
+	compressionType = "compression.type"
+	maxMessageBytes = "max.message.bytes"
+	retentionBytes  = "retention.bytes"
+	retentionMS     = "retention.ms"
+	cleanupPolicy   = "cleanup.policy"
+)
+
 // NewService creates a new service
 //go:generate mockgen -package=mocks -destination=../mocks/clusterAdmin.go github.com/Shopify/sarama ClusterAdmin
 func New(clusterAdmin sarama.ClusterAdmin) *Service {
@@ -51,30 +59,30 @@ func mapTopicDetailToTopic(n string, td sarama.TopicDetail) *kta.Topic {
 		Name:              n,
 		Partitions:        td.NumPartitions,
 		ReplicationFactor: int32(td.ReplicationFactor),
-		TopicCompression:  fixNullString(td.ConfigEntries["compresion.type"]),
-		MaxMessageBytes:   fixNullString(td.ConfigEntries["max.message.bytes"]),
-		MaxRetentionBytes: fixNullString(td.ConfigEntries["retention.bytes"]),
-		MaxRetentionTime:  fixNullString(td.ConfigEntries["retention.ms"]),
-		CleanupPolicy:     fixNullString(td.ConfigEntries["cleanup.policy"]),
+		TopicCompression:  fixNullString(td.ConfigEntries[compressionType]),
+		MaxMessageBytes:   fixNullString(td.ConfigEntries[maxMessageBytes]),
+		MaxRetentionBytes: fixNullString(td.ConfigEntries[retentionBytes]),
+		MaxRetentionTime:  fixNullString(td.ConfigEntries[retentionMS]),
+		CleanupPolicy:     fixNullString(td.ConfigEntries[cleanupPolicy]),
 	}
 }
 
 func mapTopicToTopicDetail(t *kta.Topic) *sarama.TopicDetail {
 	topicConfig := map[string]*string{}
 	if t.TopicCompression != "" {
-		topicConfig["compression.type"] = &t.TopicCompression
+		topicConfig[compressionType] = &t.TopicCompression
 	}
 	if t.MaxMessageBytes != "" {
-		topicConfig["max.message.bytes"] = &t.MaxMessageBytes
+		topicConfig[maxMessageBytes] = &t.MaxMessageBytes
 	}
 	if t.MaxRetentionBytes != "" {
-		topicConfig["retention.bytes"] = &t.MaxRetentionBytes
+		topicConfig[retentionBytes] = &t.MaxRetentionBytes
 	}
 	if t.MaxRetentionTime != "" {
-		topicConfig["retention.ms"] = &t.MaxRetentionTime
+		topicConfig[retentionMS] = &t.MaxRetentionTime
 	}
 	if t.CleanupPolicy != "" {
-		topicConfig["cleanup.policy"] = &t.CleanupPolicy
+		topicConfig[cleanupPolicy] = &t.CleanupPolicy
 	}
 
 	return &sarama.TopicDetail{
