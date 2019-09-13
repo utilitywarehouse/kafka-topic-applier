@@ -98,6 +98,7 @@ func main() {
 
 		config := sarama.NewConfig()
 		config.Version = getKafkaVersion(*kafkaVersion)
+		config.Admin.Timeout = time.Second * 10
 
 		ca, err := sarama.NewClusterAdmin(strings.Split(*kafkaBrokers, ","), config)
 		if err != nil {

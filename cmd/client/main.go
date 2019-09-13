@@ -121,7 +121,7 @@ func main() {
 		})
 
 		cmd.Action = func() {
-			resp, err := grpcClient.Delete(ctx, &kta.Topic{
+			resp, err := grpcClient.Create(ctx, &kta.Topic{
 				Name:              *name,
 				Partitions:        int32(*partitions),
 				ReplicationFactor: int32(*replicationFactor),
