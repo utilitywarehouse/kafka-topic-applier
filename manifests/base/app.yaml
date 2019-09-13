@@ -69,7 +69,7 @@ spec:
             - name: GRPC_PORT
               value: '8090'
             - name: LOG_LEVEL
-              value: warn
+              value: info
             - name: TEAM
               value: billing
             - name: LOG_FORMAT
