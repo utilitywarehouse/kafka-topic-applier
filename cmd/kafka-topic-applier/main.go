@@ -90,6 +90,12 @@ func main() {
 		EnvVar: "TOPICS_FILE",
 		Value:  "/tmp/topics.yaml",
 	})
+	kafkaTimeout := app.Int(cli.IntOpt{
+		Name:   "kafka-timeout",
+		Desc:   "How long to wait for kafka to timeout in seconds",
+		Value:  60,
+		EnvVar: "KAFKA_TIMEOUT",
+	})
 
 	app.Action = func() {
 		configureLogger(*logLevel, *logFormat)
@@ -98,7 +104,7 @@ func main() {
 
 		config := sarama.NewConfig()
 		config.Version = getKafkaVersion(*kafkaVersion)
-		config.Admin.Timeout = time.Second * 10
+		config.Admin.Timeout = time.Duration(10000 * *kafkaTimeout)
 
 		ca, err := sarama.NewClusterAdmin(strings.Split(*kafkaBrokers, ","), config)
 		if err != nil {
