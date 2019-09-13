@@ -23,7 +23,6 @@ import (
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/service"
 
-	"github.com/utilitywarehouse/go-ops-health-checks/pkg/grpchealth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"
@@ -91,6 +90,12 @@ func main() {
 		EnvVar: "TOPICS_FILE",
 		Value:  "/tmp/topics.yaml",
 	})
+	kafkaTimeout := app.Int(cli.IntOpt{
+		Name:   "kafka-timeout",
+		Desc:   "How long to wait for kafka to timeout in seconds",
+		Value:  60,
+		EnvVar: "KAFKA_TIMEOUT",
+	})
 
 	app.Action = func() {
 		configureLogger(*logLevel, *logFormat)
@@ -99,6 +104,7 @@ func main() {
 
 		config := sarama.NewConfig()
 		config.Version = getKafkaVersion(*kafkaVersion)
+		config.Admin.Timeout = time.Duration(1000000000 * *kafkaTimeout)
 
 		ca, err := sarama.NewClusterAdmin(strings.Split(*kafkaBrokers, ","), config)
 		if err != nil {
@@ -184,10 +190,8 @@ func newOpHandler(grpcPort *int, team *string) http.Handler {
 	return op.NewHandler(op.
 		NewStatus(appName, appDesc).
 		AddOwner(*team, fmt.Sprintf("#%s", *team)).
-		//AddLink("vcs", fmt.Sprintf("github.com/utilitywarehouse/kafka-topic-applier")).
 		SetRevision(gitHash).
-		AddChecker("grpc-server", grpchealth.NewCheck(fmt.Sprintf("127.0.0.1:%d", *grpcPort), "", "gRPC API will not be available")).
-		ReadyUseHealthCheck())
+		ReadyAlways())
 }
 
 func configureLogger(level, format string) {
