@@ -65,7 +65,7 @@ spec:
             - name: OPS_PORT
               value: '8081'
             - name: TOPICS_FILE
-              value: /tmp/topics.yaml
+              value: /tmp/kta/topics.yaml
             - name: GRPC_PORT
               value: '8090'
             - name: LOG_LEVEL
@@ -86,7 +86,7 @@ spec:
                   key: internal.kafka.broker.version
           volumeMounts:
             - name: kafka-topics
-              mountPath: /tmp/topics.yaml
+              mountPath: /tmp/kta
       volumes:
         - configMap:
             defaultMode: 420
