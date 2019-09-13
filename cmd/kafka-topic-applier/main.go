@@ -23,7 +23,6 @@ import (
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/service"
 
-	"github.com/utilitywarehouse/go-ops-health-checks/pkg/grpchealth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"
@@ -184,10 +183,8 @@ func newOpHandler(grpcPort *int, team *string) http.Handler {
 	return op.NewHandler(op.
 		NewStatus(appName, appDesc).
 		AddOwner(*team, fmt.Sprintf("#%s", *team)).
-		//AddLink("vcs", fmt.Sprintf("github.com/utilitywarehouse/kafka-topic-applier")).
 		SetRevision(gitHash).
-		AddChecker("grpc-server", grpchealth.NewCheck(fmt.Sprintf("127.0.0.1:%d", *grpcPort), "", "gRPC API will not be available")).
-		ReadyUseHealthCheck())
+		ReadyAlways())
 }
 
 func configureLogger(level, format string) {
