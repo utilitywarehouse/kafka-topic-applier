@@ -33,7 +33,10 @@ type Service struct {
 // Create adds a new topic to Kafka if it doesn't already exist
 func (s *Service) Create(ctx context.Context, req *kta.Topic) (*empty.Empty, error) {
 	err := s.clusterAdmin.CreateTopic(req.Name, mapTopicToTopicDetail(req), false)
-	return &empty.Empty{}, fmt.Errorf("failed to create topic %s, err: %v", req.Name, err)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create topic %s, err: %v", req.Name, err)
+	}
+	return &empty.Empty{}, nil
 }
 
 // List return existing Topics
@@ -54,7 +57,10 @@ func (s *Service) List(ctx context.Context, _ *empty.Empty) (*kta.Topics, error)
 // Delete removes a topic from Kafka
 func (s *Service) Delete(ctx context.Context, req *kta.Topic) (*empty.Empty, error) {
 	err := s.clusterAdmin.DeleteTopic(req.Name)
-	return &empty.Empty{}, fmt.Errorf("failed to delete topic %s, err: %v", req.Name, err)
+	if err != nil {
+		return nil, fmt.Errorf("failed to delete topic %s, err: %v", req.Name, err)
+	}
+	return &empty.Empty{}, nil
 }
 
 func mapTopicDetailToTopic(n string, td sarama.TopicDetail) *kta.Topic {
