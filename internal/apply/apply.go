@@ -46,7 +46,7 @@ func (l *Applier) Apply(filePath string) error {
 			log.Infof("removing topic %s", t.Name)
 			_, err := l.svc.Delete(ctx, t)
 			if err != nil {
-				return err
+				log.Error(err)
 			}
 		default:
 			log.Infof("creating topic %s", t.Name)
