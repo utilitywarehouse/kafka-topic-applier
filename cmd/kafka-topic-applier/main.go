@@ -93,7 +93,7 @@ func main() {
 	kafkaTimeout := app.Int(cli.IntOpt{
 		Name:   "kafka-timeout",
 		Desc:   "How long to wait for kafka to timeout in seconds",
-		Value:  60,
+		Value:  3,
 		EnvVar: "KAFKA_TIMEOUT",
 	})
 
