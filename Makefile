@@ -26,17 +26,17 @@ SPACE := $(EMPTY) $(EMPTY)
 join-with = $(subst $(SPACE),$1,$(strip $2))
 LINTER := golangci-lint
 
+
+.PHONY: install
+install:
+	GO111MODULE=on GOPRIVATE="github.com/utilitywarehouse/*" go mod download
+
 $(LINTER):
 	@ [ -e ./bin/$(LINTER) ] || wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s latest
 
 .PHONY: lint
 lint: $(LINTER)
 	./bin/$(LINTER) run $(LINT_FLAGS)
-
-.PHONY: install
-install:
-	go get -v -t -d ./... 2>&1 | sed -e "s/[[:alnum:]]*:x-oauth-basic/redacted/"
-
 
 .PHONY: clean
 clean:
