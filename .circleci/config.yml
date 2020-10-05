@@ -1,19 +1,27 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src/github.com/utilitywarehouse/app
+    working_directory: ~/app/kafka-topic-applier
     docker:
     - image: circleci/golang:1
+    
+    
     steps:
       - checkout
-      - run: mv /go/src/github.com/utilitywarehouse/app /go/src/github.com/utilitywarehouse/$CIRCLE_PROJECT_REPONAME
+      
+      
       - run: git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-      - run: cd ../$CIRCLE_PROJECT_REPONAME && make install
-      - run: cd ../$CIRCLE_PROJECT_REPONAME && make lint test
-      - setup_remote_docker:
-          version: 17.11.0-ce
-      - run: cd ../$CIRCLE_PROJECT_REPONAME && make ci-docker-build
-
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run: make install
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run: make lint test
+      - setup_remote_docker
+      - run: make ci-docker-build
 workflows:
   version: 2
   development:
