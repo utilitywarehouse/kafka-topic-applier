@@ -118,7 +118,7 @@ func main() {
 		go startGRPCServer(grpcServer, grpcPort)
 		defer grpcServer.GracefulStop()
 
-		opsServer := initialiseOpsServer(opsPort, grpcPort, team)
+		opsServer := initialiseOpsServer(opsPort, team)
 		go startOpsServer(opsServer)
 		defer opsServer.Shutdown(context.Background())
 
@@ -139,10 +139,10 @@ func main() {
 	}
 }
 
-func initialiseOpsServer(opsPort *int, grpcPort *int, team *string) *http.Server {
+func initialiseOpsServer(opsPort *int, team *string) *http.Server {
 	return &http.Server{
 		Addr:    fmt.Sprintf(":%d", *opsPort),
-		Handler: newOpHandler(grpcPort, team),
+		Handler: newOpHandler(team),
 	}
 }
 
@@ -186,7 +186,7 @@ func startGRPCServer(grpcServer *grpc.Server, grpcPort *int) {
 	}()
 }
 
-func newOpHandler(grpcPort *int, team *string) http.Handler {
+func newOpHandler(team *string) http.Handler {
 	return op.NewHandler(op.
 		NewStatus(appName, appDesc).
 		AddOwner(*team, fmt.Sprintf("#%s", *team)).
