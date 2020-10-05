@@ -24,18 +24,14 @@ TESTFLAGS := -v -cover
 EMPTY :=
 SPACE := $(EMPTY) $(EMPTY)
 join-with = $(subst $(SPACE),$1,$(strip $2))
-
-
-LINT_FLAGS :=--disable  errcheck 
-LINTER_EXE := golangci-lint
-LINTER := $(GOPATH)/bin/$(LINTER_EXE)
+LINTER := golangci-lint
 
 $(LINTER):
 	@ [ -e ./bin/$(LINTER) ] || wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s latest
 
 .PHONY: lint
 lint: $(LINTER)
-	$(LINTER) run $(LINT_FLAGS)
+	./bin/$(LINTER) run $(LINT_FLAGS)
 
 .PHONY: install
 install:
