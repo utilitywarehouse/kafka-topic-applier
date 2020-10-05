@@ -31,7 +31,7 @@ LINTER_EXE := golangci-lint
 LINTER := $(GOPATH)/bin/$(LINTER_EXE)
 
 $(LINTER):
-	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+	@ [ -e ./bin/$(LINTER) ] || wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s latest
 
 .PHONY: lint
 lint: $(LINTER)
