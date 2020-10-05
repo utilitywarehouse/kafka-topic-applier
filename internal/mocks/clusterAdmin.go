@@ -47,6 +47,20 @@ func (mr *MockClusterAdminMockRecorder) AlterConfig(arg0, arg1, arg2, arg3 inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlterConfig", reflect.TypeOf((*MockClusterAdmin)(nil).AlterConfig), arg0, arg1, arg2, arg3)
 }
 
+// AlterPartitionReassignments mocks base method
+func (m *MockClusterAdmin) AlterPartitionReassignments(arg0 string, arg1 [][]int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AlterPartitionReassignments", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AlterPartitionReassignments indicates an expected call of AlterPartitionReassignments
+func (mr *MockClusterAdminMockRecorder) AlterPartitionReassignments(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlterPartitionReassignments", reflect.TypeOf((*MockClusterAdmin)(nil).AlterPartitionReassignments), arg0, arg1)
+}
+
 // Close mocks base method
 func (m *MockClusterAdmin) Close() error {
 	m.ctrl.T.Helper()
@@ -206,6 +220,21 @@ func (mr *MockClusterAdminMockRecorder) DescribeConsumerGroups(arg0 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeConsumerGroups", reflect.TypeOf((*MockClusterAdmin)(nil).DescribeConsumerGroups), arg0)
 }
 
+// DescribeLogDirs mocks base method
+func (m *MockClusterAdmin) DescribeLogDirs(arg0 []int32) (map[int32][]sarama.DescribeLogDirsResponseDirMetadata, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescribeLogDirs", arg0)
+	ret0, _ := ret[0].(map[int32][]sarama.DescribeLogDirsResponseDirMetadata)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeLogDirs indicates an expected call of DescribeLogDirs
+func (mr *MockClusterAdminMockRecorder) DescribeLogDirs(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeLogDirs", reflect.TypeOf((*MockClusterAdmin)(nil).DescribeLogDirs), arg0)
+}
+
 // DescribeTopics mocks base method
 func (m *MockClusterAdmin) DescribeTopics(arg0 []string) ([]*sarama.TopicMetadata, error) {
 	m.ctrl.T.Helper()
@@ -264,6 +293,21 @@ func (m *MockClusterAdmin) ListConsumerGroups() (map[string]string, error) {
 func (mr *MockClusterAdminMockRecorder) ListConsumerGroups() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListConsumerGroups", reflect.TypeOf((*MockClusterAdmin)(nil).ListConsumerGroups))
+}
+
+// ListPartitionReassignments mocks base method
+func (m *MockClusterAdmin) ListPartitionReassignments(arg0 string, arg1 []int32) (map[string]map[int32]*sarama.PartitionReplicaReassignmentsStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPartitionReassignments", arg0, arg1)
+	ret0, _ := ret[0].(map[string]map[int32]*sarama.PartitionReplicaReassignmentsStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPartitionReassignments indicates an expected call of ListPartitionReassignments
+func (mr *MockClusterAdminMockRecorder) ListPartitionReassignments(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPartitionReassignments", reflect.TypeOf((*MockClusterAdmin)(nil).ListPartitionReassignments), arg0, arg1)
 }
 
 // ListTopics mocks base method
