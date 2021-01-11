@@ -114,7 +114,9 @@ func main() {
 
 		svc := service.New(ca)
 
-		grpcServer := initialiseGRPCServer(svc)
+		grpcLogger := configureGrpcLogger()
+
+		grpcServer := initialiseGRPCServer(svc, grpcLogger)
 		go startGRPCServer(grpcServer, grpcPort)
 		defer grpcServer.GracefulStop()
 
@@ -156,14 +158,13 @@ func startOpsServer(opsServer *http.Server) {
 	}
 }
 
-func initialiseGRPCServer(svc kta.TopicBotServer) *grpc.Server {
+func initialiseGRPCServer(svc kta.TopicBotServer, logger *log.Logger) *grpc.Server {
 	grpc_prometheus.EnableHandlingTimeHistogram()
-	grpc_logrus.ReplaceGrpcLogger(log.NewEntry(log.StandardLogger()))
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_prometheus.UnaryServerInterceptor,
 			grpc_recovery.UnaryServerInterceptor(),
-			grpc_logrus.UnaryServerInterceptor(log.NewEntry(log.StandardLogger())),
+			grpc_logrus.UnaryServerInterceptor(log.NewEntry(logger)),
 		)),
 	)
 	kta.RegisterTopicBotServer(grpcServer, svc)
@@ -210,6 +211,13 @@ func configureLogger(level, format string) {
 	if format == "json" {
 		log.SetFormatter(&log.JSONFormatter{})
 	}
+}
+
+func configureGrpcLogger() *log.Logger {
+	l := log.New()
+	l.SetLevel(log.WarnLevel)
+	grpc_logrus.ReplaceGrpcLogger(log.NewEntry(l))
+	return l
 }
 
 func waitForShutdown() {
