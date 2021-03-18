@@ -5,9 +5,9 @@ metadata:
     prometheus.io/scrape: 'true'
     prometheus.io/path: /__/metrics
     prometheus.io/port: '8081'
-  name: &app kafka-topic-applier
+  name: kafka-topic-applier
   labels:
-    app: *app
+    app: kafka-topic-applier
 spec:
   ports:
     - name: ops
@@ -17,7 +17,7 @@ spec:
       protocol: TCP
       port: 8090
   selector:
-    app: *app
+    app: kafka-topic-applier
 ---
 apiVersion: apps/v1
 kind: Deployment
