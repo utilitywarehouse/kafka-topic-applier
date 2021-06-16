@@ -131,7 +131,9 @@ func main() {
 		svcCli := kta.NewTopicBotClient(svcGrpcClientConn)
 
 		a := apply.NewApplier(svcCli)
-		a.Apply(*topicsFile)
+		if err := a.Apply(*topicsFile); err != nil {
+			log.Fatalf("Could not apply topics %v", err)
+		}
 
 		waitForShutdown()
 	}
