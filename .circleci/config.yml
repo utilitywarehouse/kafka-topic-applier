@@ -3,13 +3,9 @@ jobs:
   build:
     working_directory: ~/app/kafka-topic-applier
     docker:
-    - image: circleci/golang:1
-    
-    
+      - image: circleci/golang:1
     steps:
       - checkout
-      
-      
       - run: git config --global url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
       - restore_cache:
           keys:
@@ -20,7 +16,8 @@ jobs:
           paths:
             - "/go/pkg/mod"
       - run: make lint test
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.6
       - run: make ci-docker-build
 workflows:
   version: 2
