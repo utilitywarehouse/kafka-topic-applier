@@ -7,10 +7,10 @@ import (
 
 	"github.com/Shopify/sarama"
 	"github.com/golang/mock/gomock"
-	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/mocks"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/service"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type testSuite struct {
@@ -57,7 +57,7 @@ func TestSuccessfullyList(t *testing.T) {
 	tt := make(map[string]sarama.TopicDetail)
 	ts.mock.ca.EXPECT().ListTopics().Return(tt, nil).Times(1)
 
-	_, err := ts.svc.List(ts.ctx, &empty.Empty{})
+	_, err := ts.svc.List(ts.ctx, &emptypb.Empty{})
 	if err != nil {
 		log.Fatal(err)
 	}

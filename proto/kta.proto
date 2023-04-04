@@ -2,28 +2,28 @@ syntax = "proto3";
 
 package kta;
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/empty.proto";
 
+option go_package = "./kta";
+
 service TopicBot {
-    rpc Create(Topic) returns (google.protobuf.Empty) {}
-    rpc List(google.protobuf.Empty) returns (Topics) {}
-    rpc Delete(Topic) returns (google.protobuf.Empty) {}
+  rpc Create(Topic) returns (google.protobuf.Empty) {}
+  rpc List(google.protobuf.Empty) returns (Topics) {}
+  rpc Delete(Topic) returns (google.protobuf.Empty) {}
 }
 
 message Topics {
-    repeated Topic topics = 3 [(gogoproto.moretags) ="yaml:\"topics\""];
+  repeated Topic topics = 3;
 }
 
 message Topic {
-    string name = 1 [(gogoproto.moretags) ="yaml:\"name\""];
-    int32  partitions = 2 [(gogoproto.moretags) ="yaml:\"partitions\""];
-    int32  replication_factor = 3 [(gogoproto.moretags) ="yaml:\"replication_factor\""];
-    string topic_compression = 4 [(gogoproto.moretags) ="yaml:\"topic_compression\""];
-    string max_message_bytes = 5 [(gogoproto.moretags) ="yaml:\"max_message_bytes\""];
-    string max_retention_bytes = 6 [(gogoproto.moretags) ="yaml:\"max_retention_bytes\""];
-    string max_retention_time = 7 [(gogoproto.moretags) ="yaml:\"max_retention_time\""];
-    string cleanup_policy = 8 [(gogoproto.moretags) ="yaml:\"cleanup_policy\""];
-    bool should_be_removed = 9 [(gogoproto.moretags) ="yaml:\"should_be_removed\""];
+  string name = 1;
+  int32 partitions = 2;
+  int32 replication_factor = 3;
+  string topic_compression = 4;
+  string max_message_bytes = 5;
+  string max_retention_bytes = 6;
+  string max_retention_time = 7;
+  string cleanup_policy = 8;
+  bool should_be_removed = 9;
 }
-

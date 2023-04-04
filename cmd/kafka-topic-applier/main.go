@@ -29,7 +29,6 @@ import (
 
 	cli "github.com/jawher/mow.cli"
 	log "github.com/sirupsen/logrus"
-	"github.com/utilitywarehouse/go-operational/op"
 )
 
 const (
@@ -42,12 +41,6 @@ var gitHash string // populated at compile time
 func main() {
 	app := cli.App(appName, appDesc)
 
-	opsPort := app.Int(cli.IntOpt{
-		Name:   "ops-port",
-		Desc:   "The HTTP ops port",
-		EnvVar: "OPS_PORT",
-		Value:  8081,
-	})
 	grpcPort := app.Int(cli.IntOpt{
 		Name:   "grpc-port",
 		Desc:   "The port to listen on for API GRPC connections",
@@ -65,12 +58,6 @@ func main() {
 		Desc:   "Log format, if set to text will use text as logging format, otherwise will use json",
 		EnvVar: "LOG_FORMAT",
 		Value:  "json",
-	})
-	team := app.String(cli.StringOpt{
-		Name:   "team",
-		Desc:   "Who's running this",
-		EnvVar: "TEAM",
-		Value:  "billing",
 	})
 	kafkaBrokers := app.String(cli.StringOpt{
 		Name:   "kafka-brokers",
@@ -120,10 +107,6 @@ func main() {
 		go startGRPCServer(grpcServer, grpcPort)
 		defer grpcServer.GracefulStop()
 
-		opsServer := initialiseOpsServer(opsPort, team)
-		go startOpsServer(opsServer)
-		defer opsServer.Shutdown(context.Background())
-
 		localSvc := fmt.Sprintf("localhost:%d", *grpcPort)
 		svcGrpcClientConn := initialiseGRPCClientConnection(ctx, &localSvc)
 		defer svcGrpcClientConn.Close()
@@ -140,13 +123,6 @@ func main() {
 
 	if err := app.Run(os.Args); err != nil {
 		log.WithError(err).Panic("unable to run app")
-	}
-}
-
-func initialiseOpsServer(opsPort *int, team *string) *http.Server {
-	return &http.Server{
-		Addr:    fmt.Sprintf(":%d", *opsPort),
-		Handler: newOpHandler(team),
 	}
 }
 
@@ -187,14 +163,6 @@ func startGRPCServer(grpcServer *grpc.Server, grpcPort *int) {
 			log.WithError(err).Panic("failed to serve GRPC connections")
 		}
 	}()
-}
-
-func newOpHandler(team *string) http.Handler {
-	return op.NewHandler(op.
-		NewStatus(appName, appDesc).
-		AddOwner(*team, fmt.Sprintf("#%s", *team)).
-		SetRevision(gitHash).
-		ReadyAlways())
 }
 
 func configureLogger(level, format string) {
