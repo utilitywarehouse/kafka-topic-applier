@@ -1,3 +1,5 @@
+IMAGE="quay.io/utilitywarehouse/kafka-topic-applier"
+
 .PHONY: install
 install:
 	go install \
@@ -15,3 +17,12 @@ generate: install
 .PHONY: format
 format:
 	buf format proto -w
+
+.PHONY: release
+release:
+	@sd "$(IMAGE):master" "$(IMAGE):$(VERSION)" $$(rg -l -- $(IMAGE) manifests/)
+	@git add -- manifests/
+	@git commit -m "Release $(VERSION)"
+	@sd "$(IMAGE):$(VERSION)" "$(IMAGE):master" $$(rg -l -- "$(IMAGE)" manifests/)
+	@git add -- manifests/
+	@git commit -m "Clean up release $(VERSION)"
