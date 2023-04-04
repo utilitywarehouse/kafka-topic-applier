@@ -7,10 +7,10 @@ import (
 	"os"
 
 	"github.com/ghodss/yaml"
-	"google.golang.org/protobuf/ptypes/empty"
 	cli "github.com/jawher/mow.cli"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 const (
@@ -45,7 +45,7 @@ func main() {
 		})
 
 		cmd.Action = func() {
-			resp, err := grpcClient.List(ctx, &empty.Empty{})
+			resp, err := grpcClient.List(ctx, &emptypb.Empty{})
 			if err != nil {
 				log.Fatal("failed to run command", err)
 			}

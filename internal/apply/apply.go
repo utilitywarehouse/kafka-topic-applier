@@ -6,9 +6,9 @@ import (
 	"log"
 
 	"github.com/ghodss/yaml"
-	"google.golang.org/protobuf/ptypes/empty"
 	"github.com/pkg/errors"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Applier struct {
@@ -21,7 +21,7 @@ func NewApplier(svc kta.TopicBotClient) *Applier {
 
 func (l *Applier) Apply(filePath string) error {
 	ctx := context.Background()
-	existingTopics, err := l.svc.List(ctx, &empty.Empty{})
+	existingTopics, err := l.svc.List(ctx, &emptypb.Empty{})
 	if err != nil {
 		return err
 	}

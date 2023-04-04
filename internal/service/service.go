@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/Shopify/sarama"
-	"google.golang.org/protobuf/ptypes/empty"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 const (
@@ -18,6 +18,7 @@ const (
 )
 
 // NewService creates a new service
+//
 //go:generate mockgen -package=mocks -destination=../mocks/clusterAdmin.go github.com/Shopify/sarama ClusterAdmin
 func New(clusterAdmin sarama.ClusterAdmin) *Service {
 	return &Service{
@@ -31,16 +32,16 @@ type Service struct {
 }
 
 // Create adds a new topic to Kafka if it doesn't already exist
-func (s *Service) Create(ctx context.Context, req *kta.Topic) (*empty.Empty, error) {
+func (s *Service) Create(ctx context.Context, req *kta.Topic) (*emptypb.Empty, error) {
 	err := s.clusterAdmin.CreateTopic(req.Name, mapTopicToTopicDetail(req), false)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create topic %s, err: %v", req.Name, err)
 	}
-	return &empty.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // List return existing Topics
-func (s *Service) List(ctx context.Context, _ *empty.Empty) (*kta.Topics, error) {
+func (s *Service) List(ctx context.Context, _ *emptypb.Empty) (*kta.Topics, error) {
 	var topics kta.Topics
 	tt, err := s.clusterAdmin.ListTopics()
 	if err != nil {
@@ -55,12 +56,12 @@ func (s *Service) List(ctx context.Context, _ *empty.Empty) (*kta.Topics, error)
 }
 
 // Delete removes a topic from Kafka
-func (s *Service) Delete(ctx context.Context, req *kta.Topic) (*empty.Empty, error) {
+func (s *Service) Delete(ctx context.Context, req *kta.Topic) (*emptypb.Empty, error) {
 	err := s.clusterAdmin.DeleteTopic(req.Name)
 	if err != nil {
 		return nil, fmt.Errorf("failed to delete topic %s, err: %v", req.Name, err)
 	}
-	return &empty.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 func mapTopicDetailToTopic(n string, td sarama.TopicDetail) *kta.Topic {
