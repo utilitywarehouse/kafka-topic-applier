@@ -1,8 +1,13 @@
-.PHONY: mocks
-mocks:
-	go generate ./...
+.PHONY: install
+install:
+	go install \
+			github.com/golang/mock/mockgen \
+			github.com/bufbuild/buf/cmd/buf \
+			google.golang.org/protobuf/cmd/protoc-gen-go \
+			google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
-.PHONY: docker-protoc
-docker-protoc:
+.PHONY: generate
+generate: install
 	rm -rf ./internal/pb
-	docker run -v $$PWD:/defs namely/protoc-all -f ./proto/kta.proto -l go -o ./internal/pb/
+	buf generate
+	go generate ./...
