@@ -1,9 +1,10 @@
 FROM golang:1.20-alpine AS build
+ENV CGO_ENABLED=0
 WORKDIR /go/src/github.com/utilitywarehouse/kafka-topic-applier
 COPY . /go/src/github.com/utilitywarehouse/kafka-topic-applier
 RUN apk --no-cache add git \
       && go get ./... \
-      && CGO_ENABLED=0 go build -o /kafka-topic-applier .
+      && go build -o /kafka-topic-applier ./cmd/kafka-topic-applier/
 
 FROM alpine:3.17
 RUN apk add --no-cache ca-certificates
