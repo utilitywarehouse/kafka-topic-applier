@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: kafka-topic-applier
-          image: quay.io/utilitywarehouse/kafka-topic-applier:v1.0.0-RC1
+          image: quay.io/utilitywarehouse/kafka-topic-applier:master
           resources:
             requests:
               cpu: 0m
