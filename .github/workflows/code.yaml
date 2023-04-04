@@ -1,4 +1,4 @@
-name: Code
+name: code
 on:
   push:
 jobs:
