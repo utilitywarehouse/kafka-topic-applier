@@ -11,3 +11,7 @@ generate: install
 	rm -rf ./internal/pb
 	buf generate
 	go generate ./...
+
+.PHONY: format
+format:
+	buf format proto -w
