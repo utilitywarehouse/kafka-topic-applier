@@ -7,7 +7,7 @@ import (
 
 	"github.com/Shopify/sarama"
 	"github.com/golang/mock/gomock"
-	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/protobuf/ptypes/empty"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/mocks"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/service"

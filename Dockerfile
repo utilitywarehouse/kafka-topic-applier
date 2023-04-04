@@ -1,28 +1,11 @@
-FROM golang:1-alpine AS build
+FROM golang:1.20-alpine AS build
+WORKDIR /go/src/github.com/utilitywarehouse/kafka-topic-applier
+COPY . /go/src/github.com/utilitywarehouse/kafka-topic-applier
+RUN apk --no-cache add git \
+      && go get ./... \
+      && CGO_ENABLED=0 go build -o /kafka-topic-applier .
 
-RUN apk update && apk add make git gcc musl-dev
-
-ARG GITHUB_TOKEN
-ARG SERVICE
-
-RUN git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-
-ADD . /go/src/github.com/utilitywarehouse/${SERVICE}
-
-WORKDIR /go/src/github.com/utilitywarehouse/${SERVICE}
-
-RUN make clean install
-RUN make ${SERVICE}
-
-RUN mv ${SERVICE} /${SERVICE}
-
-FROM alpine:latest
-
-ARG SERVICE
-
-ENV APP=${SERVICE}
-
-RUN apk add --no-cache ca-certificates && mkdir /app
-COPY --from=build /${SERVICE} /app/${SERVICE}
-
-ENTRYPOINT exec /app/${APP}
+FROM alpine:3.17
+RUN apk add --no-cache ca-certificates
+COPY --from=build /kafka-topic-applier /kafka-topic-applier
+CMD [ "/kafka-topic-applier" ]

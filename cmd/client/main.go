@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/ghodss/yaml"
-	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/protobuf/ptypes/empty"
 	cli "github.com/jawher/mow.cli"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
 	"google.golang.org/grpc"

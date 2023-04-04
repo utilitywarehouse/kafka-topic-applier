@@ -3,12 +3,12 @@ package apply
 import (
 	"context"
 	"io/ioutil"
+	"log"
 
 	"github.com/ghodss/yaml"
-	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/protobuf/ptypes/empty"
 	"github.com/pkg/errors"
 	"github.com/utilitywarehouse/kafka-topic-applier/internal/pb/kta"
-	"github.com/utilitywarehouse/uwgolib/log"
 )
 
 type Applier struct {
@@ -43,13 +43,13 @@ func (l *Applier) Apply(filePath string) error {
 		case !topicExists[t.Name] && t.ShouldBeRemoved:
 			continue
 		case t.ShouldBeRemoved:
-			log.Infof("removing topic %s", t.Name)
+			log.Printf("removing topic %s\n", t.Name)
 			_, err := l.svc.Delete(ctx, t)
 			if err != nil {
-				log.Error(err)
+				log.Print(err)
 			}
 		default:
-			log.Infof("creating topic %s", t.Name)
+			log.Printf("creating topic %s\n", t.Name)
 			_, err := l.svc.Create(ctx, t)
 			if err != nil {
 				return err
