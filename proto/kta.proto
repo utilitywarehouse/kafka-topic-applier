@@ -1,28 +1,29 @@
 syntax = "proto3";
 
 package kta;
-option go_package = "./kta";
 
 import "google/protobuf/empty.proto";
 
+option go_package = "./kta";
+
 service TopicBot {
-    rpc Create(Topic) returns (google.protobuf.Empty) {}
-    rpc List(google.protobuf.Empty) returns (Topics) {}
-    rpc Delete(Topic) returns (google.protobuf.Empty) {}
+  rpc Create(Topic) returns (google.protobuf.Empty) {}
+  rpc List(google.protobuf.Empty) returns (Topics) {}
+  rpc Delete(Topic) returns (google.protobuf.Empty) {}
 }
 
 message Topics {
-    repeated Topic topics = 3;
+  repeated Topic topics = 3;
 }
 
 message Topic {
-    string name = 1;
-    int32  partitions = 2;
-    int32  replication_factor = 3;
-    string topic_compression = 4;
-    string max_message_bytes = 5;
-    string max_retention_bytes = 6;
-    string max_retention_time = 7;
-    string cleanup_policy = 8;
-    bool should_be_removed = 9;
+  string name = 1;
+  int32 partitions = 2;
+  int32 replication_factor = 3;
+  string topic_compression = 4;
+  string max_message_bytes = 5;
+  string max_retention_bytes = 6;
+  string max_retention_time = 7;
+  string cleanup_policy = 8;
+  bool should_be_removed = 9;
 }
