@@ -7,17 +7,14 @@ metadata:
     prometheus.io/port: '8081'
   name: kafka-topic-applier
   labels:
-    app: kafka-topic-applier
+    app.kubernetes.io/name: kafka-topic-applier
 spec:
   ports:
-    - name: ops
-      protocol: TCP
-      port: 8081
     - name: grpc
       protocol: TCP
       port: 8090
   selector:
-    app: kafka-topic-applier
+    app.kubernetes.io/name: kafka-topic-applier
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,22 +24,21 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-topic-applier
+      app.kubernetes.io/name: kafka-topic-applier
   template:
     metadata:
       labels:
-        app: kafka-topic-applier
+        app.kubernetes.io/name: kafka-topic-applier
     spec:
-      imagePullSecrets:
-        - name: dockerhub-key
       containers:
         - name: kafka-topic-applier
-          image: registry.uw.systems/billing/kafka-topic-applier:latest
-          imagePullPolicy: Always
+          image: quay.io/utilitywarehouse/kafka-topic-applier:master
           resources:
             requests:
-              memory: 50Mi
+              cpu: 0m
+              memory: 0Mi
             limits:
+              cpu: 0m
               memory: 100Mi
           readinessProbe:
             httpGet:
@@ -62,16 +58,12 @@ spec:
             - containerPort: 8090
               name: grpc
           env:
-            - name: OPS_PORT
-              value: '8081'
             - name: TOPICS_FILE
               value: /tmp/kta/topics.yaml
             - name: GRPC_PORT
               value: '8090'
             - name: LOG_LEVEL
               value: info
-            - name: TEAM
-              value: billing
             - name: LOG_FORMAT
               value: json
             - name: KAFKA_BROKERS
