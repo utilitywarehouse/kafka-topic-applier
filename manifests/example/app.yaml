@@ -8,6 +8,3 @@ spec:
       containers:
         - name: kafka-topic-applier
           image: registry.uw.systems/billing/kafka-topic-applier:latest
-          env:
-            - name: TEAM
-              value: billing
