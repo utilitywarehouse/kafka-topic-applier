@@ -40,18 +40,6 @@ spec:
             limits:
               cpu: 0m
               memory: 100Mi
-          readinessProbe:
-            httpGet:
-              path: /__/ready
-              port: 8081
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
-          livenessProbe:
-            httpGet:
-              path: /__/ready
-              port: 8081
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
           ports:
             - containerPort: 8081
               name: metrics
